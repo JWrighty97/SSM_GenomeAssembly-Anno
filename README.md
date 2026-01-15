@@ -33,10 +33,16 @@ fastqc -t 30 R1_paired.fq.gz R2_paired.fq.gz
 
 # Genome assembly
 
+```
+
 flye --nano-hq nano_cat_filt.fastq.gz --out-dir Flye_assem --genome-size 1.2G --asm-coverage 60 --threads 30
 #Genome size estimated by GOAT, coverage 60 used to reduce computation power as read file was so large
 
+```
+
 # Polishing 
+
+```
 
 medaka_consensus -i nano_cat_filt.fastq.gz -d flye_assem.fasta -o medaka -t 30
 
