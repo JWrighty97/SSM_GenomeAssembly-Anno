@@ -40,15 +40,34 @@ flye --nano-hq nano_cat_filt.fastq.gz --out-dir Flye_assem --genome-size 1.2G --
 
 ```
 
+# BUSCO 
+This was ran at each step of the genome assembly to ensure quality/completeness remained high
+
+```
+
+busco -i assembly.fasta -o Flye_busco -m genome --lineage aves_odb12 -c 30
+
+```
+
 # Polishing 
 
 ```
 
 medaka_consensus -i nano_cat_filt.fastq.gz -d flye_assem.fasta -o medaka -t 30
+busco -i consensus.fasta -o Med_buco --lineage aves_odb12 -t 30
 
 nextPolish run.cfg #cfg attached as example
+busco -i assembly.nexpolish.fasta -o NP_busco --lineage aves_odb12 -t 30
 
 ```
+# Hi-C assembly
+
+```
+
+mkdir Flye_improvements
+
+mv SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_1.fq SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_2.fq ./Flye_improvements
+mv assembly.nextpolish.fasta ./Flye_improvements
 
 
 
