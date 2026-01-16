@@ -1,7 +1,7 @@
 # SSM_GenomeAssembly-Anno
 Genome assembly and annotation of the Chromosome-level Scaly sided merganser genome with further analysis including demographic history and syntenic analysis
  
-Please not most software was already installed on a .yaml (lrgenomics) file provided by coauthor Dr. H. De Weerd from Edinburgh Genomics. 
+Please note most software was already installed on a .yaml (lrgenomics) file provided by coauthor Dr. H. De Weerd from Edinburgh Genomics. 
 
 # Raw data QC & trimming
 
@@ -68,6 +68,38 @@ mkdir Flye_improvements
 
 mv SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_1.fq SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_2.fq ./Flye_improvements
 mv assembly.nextpolish.fasta ./Flye_improvements
+
+#Index genome & align HiC reads
+bwa index assembly.nextpolish.fasta
+
+bwa mem -A1 -B4 -E50 -L0 assembly.nextpolish.fasta SM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_1.fq 2>> mate1.log | samtools view -Shb - > mate_R1.bam
+
+bwa mem -A1 -B4 -E50 -L0 assembly.nextpolish.fasta SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_2.fq 2>> mate2.log | samtools view -Shb - > mate_R2.bam
+
+#Digest genome using enzymes used during hi-c process
+hicFindRestSite --fasta assembly.nextpolish.fasta --searchPattern .GATC G.ANTC --outFile GenomeDigest.bed
+
+#Build Hic matrix to QC
+
+hicBuildMatrix --samFiles mate_R1.bam mate_R2.bam --restrictionSequence GATC GAATC GACTC GAGTC GATTC --danglingSequence GATC AAT ACT ATT --restrictionCutFile GenomeDigest.bed --threads 30 --outBam hiCExplorer.bam -o hic_matrix.h5 --QCfolder ./HiCExplorerQC
+
+#After QC move onto YAHS
+
+mkdir yahsresults
+cd yahsresults
+
+ln -s ../assembly.nextpolish.fasta ./
+samtools faidx assembly.nextpolish.fasta
+
+yahs assembly.nextpolish.fasta ../HiCExplorer.bam
+
+#Another BUSCO
+busco -i yahs.out.scaffolds_final.fa -o busco_yahs -m gneome -l aves_odb12 -f -c 30
+
+```
+
+
+
 
 
 
