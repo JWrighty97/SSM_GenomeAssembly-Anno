@@ -98,8 +98,26 @@ busco -i yahs.out.scaffolds_final.fa -o busco_yahs -m gneome -l aves_odb12 -f -c
 
 ```
 
+# TreeVal & Manual Curation
+
 ```
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
 # Mitogenome assembly and annotation
+
+```
 #Iteration 1 of mitofinder was used to find the most appropriate contig
 
 mitofinder -j scaly_mitogenome -1 R1_paired.fq.gz -2 R2_paired.fq.gz -r Merg_ref_mito.gb -o 2 --circular-size 45 --circular-offset 200
@@ -109,6 +127,8 @@ mitofinder -j scaly_mitogenome -1 R1_paired.fq.gz -2 R2_paired.fq.gz -r Merg_ref
 mitofinder -j scaly_mitogenome -r Merg_ref_mito.gb -a Scaly_mitogenome_mtDNA_contig_1.fasta -o 2 --circular-size 45 --circular-offset 200
 
 ```
+# Repeat annotation
+
 
 
 
