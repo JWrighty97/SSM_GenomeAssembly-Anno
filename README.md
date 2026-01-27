@@ -98,18 +98,98 @@ busco -i yahs.out.scaffolds_final.fa -o busco_yahs -m gneome -l aves_odb12 -f -c
 
 ```
 
-# TreeVal & Manual Curation
+# Tiara Decontamination 
 
 ```
 
+cd ~/
+mkdir tiara
+cd tiara
+ln -s ~/Flye_improvements/yahsresults/yahs.out.scaffolds_final.fa 
 
+tiara -i yahsresults/yahs.out.scaffolds_final.fa  -o primary.tiara -t 30 --pr --tf all -m 1000
 
-
-
-
+mv eukarya_yahs.out.scaffolds_final.fa primary_yahs_tiara.fa
 
 
 ```
+
+# TreeVal
+
+```
+# Treeval set up
+
+#Set up directory structure
+cd ~/
+mkdir treeval-resources
+mkdir -p treeval-resources/gene_alignment_prep/scripts/
+cp bin/treeval-dataprep/* treeval-resources/gene_alignment_prep/scripts/
+mkdir -p treeval-resources/gene_alignment_prep/raw_fasta/
+mkdir -p treeval-resources/gene_alignment_data/birds/csv_data/
+mkdir -p treeval-resources/synteny/birds/
+
+#Place reference genomes used for synteny in /synteny/birds directory 
+#Place assembly in raw_fasta using the decontaminated assembly
+
+cd ~/treeval/treeval-resources/gene_alignment_prep/raw_fasta
+ln -s ~/tiara/primary/primary_yahs_tiara.fa MergusSquamatus-primary.cdna.fa
+
+#prep data
+
+python3 ../scripts/GA_data_prep.py MergusSquamatus-primary.cdna.fa ncbi 10
+#Which creates a directory that must be moved to final location
+
+mv MergusSquamatus/ ../../gene_alignment_data/birds/
+
+#Generate CSV
+
+cd ~/treeval/treeval-resources/gene_alignment_prep/
+
+python3 scripts/GA_csv_gen.py ~/treeval/treeval-resources/gene_alignment_data/
+
+# Hi-C prepatation 
+
+cd ~/treeval
+mkdir hic_data
+cd hic_data #move raw hic files here
+
+samtools import -@ 20 \
+    -r ID:SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2 \
+    -r CN:Qiagen_EpiTect \
+    -r PU:SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2 \
+    -r SM:Q31 \
+    SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_1.fq.gz \
+    SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2_2.fq.gz \
+    -o SSM_HiC_EKDL240007522-1A_HHTKLDSXC_L2.cram
+samtools index *.cram
+
+
+#Nanopore data prep - turn fastq.gz into fasta
+
+cd ~/treeval
+mkdir novo_data
+cd nano_data #Move filtered nanopore data here
+
+seqtk seq -a nano_cat_filt.fastq.gz > nano.fasta
+pigz -p100 -c nano.fasta > nano.fasta.gz
+
+
+#Run Treeval
+cd ~/
+nextflow run treeval/main.nf --input treeval/treeval_primary.yaml --outdir ~/treeval/primary_out_treeval -profile singularity 
+
+```
+
+# Manual Curation
+
+```
+#Open primary_1_normal.pretext in PreText view & curate
+#save agp & state before closing
+#make new dir post_curation and move agp here
+
+mkdir post_curation
+ln -s ~/tiara/primary/primary_yahs_tiara.fa MergusSquamatus-primary.cdna.fa
+
 
 
 
