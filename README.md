@@ -191,7 +191,7 @@ mkdir post_curation
 ln -s ~/tiara/primary/primary_yahs_tiara.fa MergusSquamatus-primary.cdna.fa
 
 
-
+```
 
 
 
