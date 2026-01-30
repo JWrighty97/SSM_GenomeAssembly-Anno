@@ -234,6 +234,24 @@ mitofinder -j scaly_mitogenome -r Merg_ref_mito.gb -a Scaly_mitogenome_mtDNA_con
 ```
 # Repeat annotation
 
+```
+
+cd ~/
+ln -s ./post_curation/Mergussquamatus_primary_curated_final_chr.fa
+#Download and install the most recent RepeatModeler& Repeat Masker
+
+BuildDatabase -name SSM_db -engine ncbi Mergussquamatus_primary_curated_final_chr.fa
+RepeatModeler -database SSM_db -pa 20 -LTRStruct
+RepeatMasker -pa 20 -lib consensus.fa.classified Mergussquamatus_primary_curated_final_chr.fa
+
+#Outputs .tbl file, .out file and genome.fasta.masked
+
+```
+
+# Protein annotation - LiftOff
+
+mkdir proteins
+
 
 
 
