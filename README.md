@@ -183,12 +183,16 @@ nextflow run treeval/main.nf --input treeval/treeval_primary.yaml --outdir ~/tre
 # Manual Curation
 
 ```
-#Open primary_1_normal.pretext in PreText view & curate
+#Open primary_1_normal.pretext obtained from treeval in PreText view & curate
+#Load tracks into JBrowse2 to help identify sex chromosomes and chromosome orientation
 #save agp & state before closing
 #make new dir post_curation and move agp here
 
 mkdir post_curation
+cd ~/post_curation
 ln -s ~/tiara/primary/primary_yahs_tiara.fa MergusSquamatus-primary.cdna.fa
+
+#Activate agp
 
 
 ```
