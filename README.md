@@ -192,12 +192,33 @@ mkdir post_curation
 cd ~/post_curation
 ln -s ~/tiara/primary/primary_yahs_tiara.fa MergusSquamatus-primary.cdna.fa
 
-#Activate agp
+#Activate agp-tpf-utils python env
+cd ~/software/agp-tpf-utils
+source venv/bin/activate
 
+cd ~/post_curation
+conda activate seqtk
+perl ~/software/rapid-curation/rapid_split.py -fa MergusSquamatus-primary.cdna.fa
+
+#produces .fa.tpf
+
+#Run pretext-to-tpf
+pretext-to-tpf -a MergusSquamatus-primary.cdna.tpf -p primary_curated_1_normal.pretext.agp_1 -o Mergussquamatus_primary_1_curated.tpf
+deactivate
+
+conda activate bioperl
+perl ~/software/rapid-curation/rapid_join.pl -f MergusSquamatus-primary.cdna.fa -tpf Mergussquamatus_primary_1_curated.tpf -csv chrs.csv -o Mergussquamatus_primary_curated_final.fa
+
+###Another BUSCO
 
 ```
+# Rename chromosomes
 
+```
+sed 's/SUPER_/chr/g' Mergussquamatus_primary_curated_final.fa
+ > Mergussquamatus_primary_curated_final_chr.fa
 
+```
 
 # Mitogenome assembly and annotation
 
