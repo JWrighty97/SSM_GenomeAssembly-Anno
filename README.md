@@ -251,7 +251,29 @@ RepeatMasker -pa 20 -lib consensus.fa.classified Mergussquamatus_primary_curated
 # Protein annotation - LiftOff
 
 mkdir proteins
+#Download reference protein sets to be used and add them here
+cd proteins
 
+liftoff ../curated_assembly_chr.fa \
+  ZF/GCF_048771995.1_bTaeGut7.mat_genomic.fna \
+  -g ZF/GCF_048771995.1_bTaeGut7.mat_genomic.gff \
+  -o Merg_ZF_liftoff.gff3 \
+  -p 30 \
+  -u ZF_unplaced.txt \
+  -polish
+
+  #Repeat for each protein set being used we used broiler chicken, mute swan, pekin duck, zebra finch & tufted duck as listed in the paper
+  #BUSCO each result and choose the best geneset 
+
+gffread Merg_ZF_liftoff.gff3_polished \
+-g ../curated_assembly_chr.fa \
+-y Merg_ZF_proteins.faa
+
+busco -i Merg_ZF_liftoff.gff3_polished -l aves_odb10 -m proteins -o Merf_ZF_busco
+
+
+
+  
 
 
 
