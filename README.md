@@ -250,6 +250,8 @@ RepeatMasker -pa 20 -lib consensus.fa.classified Mergussquamatus_primary_curated
 
 # Protein annotation - LiftOff
 
+```
+
 mkdir proteins
 #Download reference protein sets to be used and add them here
 cd proteins
@@ -270,6 +272,8 @@ gffread Merg_ZF_liftoff.gff3_polished \
 -y Merg_ZF_proteins.faa
 
 busco -i Merg_ZF_liftoff.gff3_polished -l aves_odb10 -m proteins -o Merf_ZF_busco
+
+```
 
 
 
